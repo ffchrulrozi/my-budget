@@ -1,4 +1,6 @@
-class Paths {}
+class Paths {
+  static PathObject DASHBOARD = PathObject('dashboard', '/dashboard');
+}
 
 class PathObject {
   final String name;
