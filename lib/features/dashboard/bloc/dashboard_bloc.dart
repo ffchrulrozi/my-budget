@@ -3,7 +3,7 @@ import 'package:my_budget/features/dashboard/bloc/dashboard_event.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  DashboardBloc() : super(DashboardLoaded(1)) {
+  DashboardBloc() : super(DashboardLoaded(0)) {
     on<ChangeScreen>((event, emit) {
       emit(DashboardLoaded(event.screenIndex));
     });

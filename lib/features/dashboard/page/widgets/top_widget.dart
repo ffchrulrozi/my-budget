@@ -11,8 +11,8 @@ class TopWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
-      height: 175,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      height: 100,
       child: IndexedStack(
         index: screenIndex,
         children: [
