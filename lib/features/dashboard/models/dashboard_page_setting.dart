@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class DashboardItem {
+class DashboardPageSetting {
   final String title;
   final Color color;
   final IconData icon;
 
-  DashboardItem(this.title, this.color, this.icon);
+  DashboardPageSetting(this.title, this.color, this.icon);
 }

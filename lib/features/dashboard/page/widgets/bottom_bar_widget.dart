@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_event.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_state.dart';
-import 'package:my_budget/features/dashboard/models/dashboard_item.dart';
+import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
 
 class BottomBarWidget extends StatelessWidget {
   final PageController pageController;
-  final List<DashboardItem> items;
+  final List<DashboardPageSetting> pageSettings;
 
-  const BottomBarWidget(
-    this.pageController,
-    this.items, {
+  const BottomBarWidget({
+    required this.pageController,
+    required this.pageSettings,
     super.key,
   });
 
@@ -32,12 +32,12 @@ class BottomBarWidget extends StatelessWidget {
             if (state is DashboardLoaded) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: items.length,
+                itemCount: pageSettings.length,
                 itemBuilder: (context, index) => BottomBarMenu(
                   pageController: pageController,
                   index: index,
                   screenIndex: state.screenIndex,
-                  items: items,
+                  pageSettings: pageSettings,
                 ),
               );
             } else {
@@ -54,13 +54,13 @@ class BottomBarMenu extends StatelessWidget {
   final PageController pageController;
   final int index;
   final int screenIndex;
-  final List<DashboardItem> items;
+  final List<DashboardPageSetting> pageSettings;
 
   const BottomBarMenu({
     required this.pageController,
     required this.index,
     required this.screenIndex,
-    required this.items,
+    required this.pageSettings,
     super.key,
   });
 
@@ -74,7 +74,7 @@ class BottomBarMenu extends StatelessWidget {
 
         pageController.animateToPage(
           index,
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 300),
           curve: Curves.easeIn,
         );
       },
@@ -82,11 +82,11 @@ class BottomBarMenu extends StatelessWidget {
         height: 50,
         width: 75,
         decoration: BoxDecoration(
-          color: index == screenIndex ? items[screenIndex].color : null,
+          color: index == screenIndex ? pageSettings[screenIndex].color : null,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Icon(
-          items[index].icon,
+          pageSettings[index].icon,
           color: index == screenIndex ? Colors.white : null,
         ),
       ),
