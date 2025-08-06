@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_bloc.dart';
-import 'package:my_budget/features/dashboard/bloc/dashboard_event.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_state.dart';
 import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
 
@@ -17,35 +16,38 @@ class BottomBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 90),
-      color: Colors.white,
-      child: Container(
-        width: 100,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(225, 225, 225, 1),
-          borderRadius: BorderRadius.circular(25),
+    return Positioned(
+      bottom: 15,
+      left: 0,
+      right: 0,
+      child: Center(
+        child:  Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(225, 225, 225, 1),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: BlocBuilder<DashboardBloc, DashboardState>(
+            builder: (context, state) {
+              if (state is DashboardLoaded) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: pageSettings.length,
+                  itemBuilder: (context, index) => BottomBarMenu(
+                    pageController: pageController,
+                    index: index,
+                    screenIndex: state.screenIndex,
+                    pageSettings: pageSettings,
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
         ),
-        child: BlocBuilder<DashboardBloc, DashboardState>(
-          builder: (context, state) {
-            if (state is DashboardLoaded) {
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: pageSettings.length,
-                itemBuilder: (context, index) => BottomBarMenu(
-                  pageController: pageController,
-                  index: index,
-                  screenIndex: state.screenIndex,
-                  pageSettings: pageSettings,
-                ),
-              );
-            } else {
-              return Container();
-            }
-          },
-        ),
-      ),
+      )
     );
   }
 }
@@ -66,17 +68,16 @@ class BottomBarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<DashboardBloc>();
+    // final bloc = context.read<DashboardBloc>();
 
     return InkWell(
       onTap: () {
-        bloc.add(ChangeScreen(index));
-
         pageController.animateToPage(
           index,
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 500),
           curve: Curves.easeIn,
         );
+        // bloc.add(ChangeScreen(index));
       },
       child: Container(
         height: 50,
