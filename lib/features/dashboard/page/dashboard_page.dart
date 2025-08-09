@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_budget/features/daily/page/daily_page.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_event.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_state.dart';
@@ -8,6 +7,9 @@ import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart'
 import 'package:my_budget/features/dashboard/page/widgets/bottom_bar_widget.dart';
 import 'package:my_budget/features/report/page/report_page.dart';
 import 'package:my_budget/features/setting/page/setting_page.dart';
+import 'package:my_budget/features/transaction/bloc/transaction_bloc.dart';
+import 'package:my_budget/features/transaction/bloc/transaction_event.dart';
+import 'package:my_budget/features/transaction/page/transaction_page.dart';
 
 class DashboardPage extends StatelessWidget {
   DashboardPage({super.key});
@@ -36,9 +38,18 @@ class DashboardPage extends StatelessWidget {
                   controller: pageController,
                   onPageChanged: (index) => bloc.add(ChangeScreen(index)),
                   children: [
-                    DailyPage(pageSetting: pageSettings[0]),
-                    ReportPage(pageSetting: pageSettings[1]),
-                    SettingPage(pageSetting: pageSettings[2]),
+                    BlocProvider(
+                      create: (_) => TransactionBloc()..add(LoadTransactions()),
+                      child: TransactionPage(pageSetting: pageSettings[0]),
+                    ),
+                    BlocProvider(
+                      create: (_) => TransactionBloc()..add(LoadTransactions()),
+                      child: ReportPage(pageSetting: pageSettings[1]),
+                    ),
+                    BlocProvider(
+                      create: (_) => TransactionBloc()..add(LoadTransactions()),
+                      child: SettingPage(pageSetting: pageSettings[2]),
+                    ),
                   ],
                 ),
               ),

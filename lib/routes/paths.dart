@@ -1,10 +1,5 @@
 class Paths {
-  static PathObject DASHBOARD = PathObject('dashboard', '/dashboard');
-}
-
-class PathObject {
-  final String name;
-  final String path;
-
-  PathObject(this.name, this.path);
+  static String DASHBOARD = '/dashboard';
+  static String TRANSACTION_ADD = '/transaction/add';
+  static String TRANSACTION_EDIT = '/transaction/edit';
 }
