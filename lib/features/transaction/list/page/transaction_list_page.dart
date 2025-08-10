@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_bloc.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_state.dart';
-import 'package:my_budget/features/transaction/page/widgets/transaction_item_box_widget.dart';
-import 'package:my_budget/functions/show_date_filter.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_bloc.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.dart';
+import 'package:my_budget/features/transaction/list/page/widgets/transaction_list_item_box_widget.dart';
 import 'package:my_budget/routes/paths.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
 import 'package:my_budget/utils/helper/money_helper.dart';
@@ -17,10 +16,9 @@ class TransactionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TransactionBloc, TransactionState>(
+    return BlocBuilder<TransactionListBloc, TransactionListState>(
       builder: (context, state) {
-        final bloc = context.read<TransactionBloc>();
-
+        final bloc = context.read<TransactionListBloc>();
         return Scaffold(
           backgroundColor: pageSetting.color,
           appBar: AppBar(
@@ -30,7 +28,17 @@ class TransactionPage extends StatelessWidget {
             titleSpacing: 0,
             actions: [
               InkWell(
-                onTap: () => showDateFilter(context),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2021),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    // bloc.add(event)
+                  }
+                },
                 child: Row(
                   children: [
                     Text("19 Jun 2025"),

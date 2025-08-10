@@ -1,43 +1,35 @@
 import 'package:equatable/equatable.dart';
 import 'package:my_budget/data/drift/app_database.dart';
 
-class TransactionState extends Equatable {
+class TransactionListState extends Equatable {
   final Summary? summary;
   final List<TransactionListResult> transactions;
   final List<Type> types;
-  final List<Category> categories;
   final bool isLoading;
-  final bool isSaved;
 
-  const TransactionState({
+  const TransactionListState({
     this.summary,
     this.transactions = const [],
     this.types = const [],
-    this.categories = const [],
     this.isLoading = false,
-    this.isSaved = false,
   });
 
-  TransactionState copyWith({
+  TransactionListState copyWith({
     Summary? summary,
     List<TransactionListResult>? transactions,
     List<Type>? types,
-    List<Category>? categories,
     bool? isLoading,
-    bool? isSaved,
   }) {
-    return TransactionState(
+    return TransactionListState(
       summary: summary ?? this.summary,
       transactions: transactions ?? this.transactions,
       types: types ?? this.types,
-      categories: categories ?? this.categories,
       isLoading: isLoading ?? this.isLoading,
-      isSaved: isSaved ?? this.isSaved,
     );
   }
 
   @override
-  List<Object?> get props => [types, categories, isLoading, isSaved];
+  List<Object?> get props => [types, isLoading];
 }
 
 class Summary {

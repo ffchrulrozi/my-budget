@@ -1,17 +1,15 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_budget/data/drift/app_database.dart';
-import 'package:my_budget/data/drift/daos/category_dao.dart';
 import 'package:my_budget/data/drift/daos/type_dao.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_event.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_state.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.dart';
 import 'package:my_budget/main.dart';
 
-class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  TransactionBloc() : super(const TransactionState()) {
+class TransactionListBloc extends Bloc<TransactionListEvent, TransactionListState> {
+  TransactionListBloc() : super(const TransactionListState()) {
     final AppDatabase db = getIt<AppDatabase>();
     final TypeDao typeDao = getIt<TypeDao>();
-    final CategoryDao categoryDao = getIt<CategoryDao>();
 
     on<LoadTransactions>((event, emit) async {
       emit(state.copyWith(isLoading: true));
@@ -54,34 +52,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       ));
     });
 
-    on<CreateTransaction>((event, emit) async {
-      await db.into(db.transactions).insert(TransactionsCompanion.insert(
-            date: Value(event.date),
-            title: event.title,
-            desc: event.desc,
-            amount: event.amount,
-            typeId: Value(event.typeId),
-            categoryId: Value(event.categoryId),
-          ));
-
-      add(LoadTransactions());
-      emit(state.copyWith(isSaved: true));
-    });
-
-    on<UpdateTransaction>((event, emit) async {
-      await (db.update(db.transactions)..where((t) => t.id.equals(event.id)))
-          .write(TransactionsCompanion(
-        date: Value(event.date),
-        title: Value(event.title),
-        desc: Value(event.desc),
-        amount: Value(event.amount),
-        typeId: Value(event.typeId),
-        categoryId: Value(event.categoryId),
-      ));
-
-      emit(state.copyWith(isSaved: true));
-    });
-
     on<DeleteTransaction>((event, emit) async {
       await (db.delete(db.transactions)..where((t) => t.id.equals(event.id)))
           .go();
@@ -94,10 +64,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       emit(state.copyWith(types: types, isLoading: false));
     });
 
-    on<TypeChanged>((event, emit) async {
+    on<FilterChanged>((event, emit) async {
       emit(state.copyWith(isLoading: true));
-      final categories = await categoryDao.getByType(event.typeId);
-      emit(state.copyWith(categories: categories, isLoading: false));
+      // final categories = await categoryDao.getByType(event.typeId);
+      // emit(state.copyWith(categories: categories, isLoading: false));
     });
   }
 }

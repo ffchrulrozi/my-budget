@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_bloc.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_event.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_state.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_bloc.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
 import 'package:my_budget/utils/helper/money_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
 
 class ItemBoxWidget extends StatelessWidget {
-  final TransactionBloc bloc;
-  final TransactionState state;
+  final TransactionListBloc bloc;
+  final TransactionListState state;
   const ItemBoxWidget(this.bloc, this.state, {super.key});
 
   @override

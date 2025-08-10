@@ -4,9 +4,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_bloc.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_event.dart';
-import 'package:my_budget/features/transaction/bloc/transaction_state.dart';
+import 'package:my_budget/features/transaction/add/bloc/transaction_add_bloc.dart';
+import 'package:my_budget/features/transaction/add/bloc/transaction_add_event.dart';
+import 'package:my_budget/features/transaction/add/bloc/transaction_add_state.dart';
 import 'package:my_budget/routes/paths.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
 
@@ -16,7 +16,7 @@ class TransactionAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormBuilderState>();
-    final bloc = context.read<TransactionBloc>();
+    final bloc = context.read<TransactionAddBloc>();
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +24,7 @@ class TransactionAddPage extends StatelessWidget {
         title: Text("Add Transaction"),
         titleSpacing: 0,
       ),
-      body: BlocConsumer<TransactionBloc, TransactionState>(
+      body: BlocConsumer<TransactionAddBloc, TransactionAddState>(
           listener: (context, state) {
         if (state.isSaved) {
           context.push(Paths.DASHBOARD);
