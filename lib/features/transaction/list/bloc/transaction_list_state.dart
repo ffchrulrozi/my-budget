@@ -1,17 +1,19 @@
-import 'package:equatable/equatable.dart';
 import 'package:my_budget/data/drift/app_database.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
 
-class TransactionListState extends Equatable {
+class TransactionListState {
   final Summary? summary;
   final List<TransactionListResult> transactions;
   final List<Type> types;
   final bool isLoading;
+  final Filter? filter;
 
   const TransactionListState({
     this.summary,
     this.transactions = const [],
     this.types = const [],
     this.isLoading = false,
+    this.filter,
   });
 
   TransactionListState copyWith({
@@ -19,17 +21,16 @@ class TransactionListState extends Equatable {
     List<TransactionListResult>? transactions,
     List<Type>? types,
     bool? isLoading,
+    Filter? filter,
   }) {
     return TransactionListState(
       summary: summary ?? this.summary,
       transactions: transactions ?? this.transactions,
       types: types ?? this.types,
       isLoading: isLoading ?? this.isLoading,
+      filter: filter ?? this.filter,
     );
   }
-
-  @override
-  List<Object?> get props => [types, isLoading];
 }
 
 class Summary {
@@ -56,4 +57,17 @@ class TransactionListResult {
     required this.categoryName,
     required this.icon,
   });
+}
+
+class Filter {
+  final DateTime? date;
+  final int? typeId;
+  Filter({this.date, this.typeId});
+
+  Filter copyWith({
+    DateTime? date,
+    int? typeId,
+  }) {
+    return Filter(date: date ?? this.date, typeId: typeId ?? this.typeId);
+  }
 }

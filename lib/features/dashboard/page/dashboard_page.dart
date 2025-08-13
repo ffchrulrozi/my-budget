@@ -39,15 +39,17 @@ class DashboardPage extends StatelessWidget {
                   onPageChanged: (index) => bloc.add(ChangeScreen(index)),
                   children: [
                     BlocProvider(
-                      create: (_) => TransactionListBloc()..add(LoadTransactions()),
+                      create: (_) => TransactionListBloc(),
                       child: TransactionPage(pageSetting: pageSettings[0]),
                     ),
                     BlocProvider(
-                      create: (_) => TransactionListBloc()..add(LoadTransactions()),
+                      create: (_) =>
+                          TransactionListBloc()..add(LoadTransactions()),
                       child: ReportPage(pageSetting: pageSettings[1]),
                     ),
                     BlocProvider(
-                      create: (_) => TransactionListBloc()..add(LoadTransactions()),
+                      create: (_) =>
+                          TransactionListBloc()..add(LoadTransactions()),
                       child: SettingPage(pageSetting: pageSettings[2]),
                     ),
                   ],

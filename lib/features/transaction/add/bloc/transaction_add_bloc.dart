@@ -6,6 +6,7 @@ import 'package:my_budget/data/drift/daos/type_dao.dart';
 import 'package:my_budget/features/transaction/add/bloc/transaction_add_event.dart';
 import 'package:my_budget/features/transaction/add/bloc/transaction_add_state.dart';
 import 'package:my_budget/main.dart';
+import 'package:my_budget/utils/ext/date_ext.dart';
 
 class TransactionAddBloc
     extends Bloc<TransactionAddEvent, TransactionAddState> {
@@ -16,7 +17,7 @@ class TransactionAddBloc
 
     on<CreateTransaction>((event, emit) async {
       await db.into(db.transactions).insert(TransactionsCompanion.insert(
-            date: Value(event.date),
+            date: Value(event.date.toStartOfDay()),
             title: event.title,
             desc: event.desc,
             amount: event.amount,

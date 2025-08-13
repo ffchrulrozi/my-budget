@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_bloc.dart';
+import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.dart';
 import 'package:my_budget/features/transaction/list/page/widgets/transaction_list_item_box_widget.dart';
 import 'package:my_budget/routes/paths.dart';
@@ -29,19 +31,23 @@ class TransactionPage extends StatelessWidget {
             actions: [
               InkWell(
                 onTap: () async {
-                  final picked = await showDatePicker(
+                  final pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: state.filter?.date,
                     firstDate: DateTime(2021),
                     lastDate: DateTime.now(),
                   );
-                  if (picked != null) {
-                    // bloc.add(event)
+
+                  if (pickedDate != null) {
+                    bloc.add(FilterChange(date: pickedDate));
                   }
                 },
                 child: Row(
                   children: [
-                    Text("19 Jun 2025"),
+                    Text(state.filter?.date == null
+                        ? ""
+                        : DateFormat("dd MMM yyyy")
+                            .format(state.filter!.date!)),
                     Icon(Icons.arrow_drop_down),
                   ],
                 ),
@@ -49,7 +55,7 @@ class TransactionPage extends StatelessWidget {
               h(2),
               DropdownButton<int>(
                 alignment: Alignment.centerRight,
-                value: 1,
+                value: state.filter?.typeId,
                 style: TextStyle(textBaseline: TextBaseline.alphabetic),
                 iconEnabledColor: Colors.white,
                 underline: Container(),
@@ -64,7 +70,7 @@ class TransactionPage extends StatelessWidget {
                       ),
                     )
                     .toList(),
-                onChanged: (val) => (),
+                onChanged: (val) => bloc.add(FilterChange(typeId: val)),
                 selectedItemBuilder: (context) => state.types
                     .map(
                       (option) => DropdownMenuItem(

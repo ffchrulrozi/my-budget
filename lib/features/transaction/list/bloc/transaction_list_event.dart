@@ -5,6 +5,8 @@ abstract class TransactionListEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class Init extends TransactionListEvent {}
+
 class LoadTransactions extends TransactionListEvent {}
 
 class DeleteTransaction extends TransactionListEvent {
@@ -12,10 +14,10 @@ class DeleteTransaction extends TransactionListEvent {
   DeleteTransaction(this.id);
 }
 
-class LoadTypes extends TransactionListEvent {}
-
-class FilterChanged extends TransactionListEvent {
+class FilterChange extends TransactionListEvent {
   final DateTime? date;
   final int? typeId;
-  FilterChanged({this.date, this.typeId});
+  FilterChange({this.date, this.typeId});
 }
+
+class LoadTypes extends TransactionListEvent {}
