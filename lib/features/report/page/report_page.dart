@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
+import 'package:my_budget/features/report/bloc/report_bloc.dart';
+import 'package:my_budget/features/report/bloc/report_event.dart';
+import 'package:my_budget/features/report/bloc/report_state.dart';
 import 'package:my_budget/features/report/page/widgets/report_chart_widget.dart';
-import 'package:my_budget/features/report/page/widgets/report_item_widget.dart';
-import 'package:my_budget/functions/show_date_filter.dart';
+import 'package:my_budget/utils/ext/date_ext.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
-import 'package:my_budget/utils/helper/money_helper.dart';
+import 'package:my_budget/utils/helper/number_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
 
 class ReportPage extends StatelessWidget {
@@ -13,6 +17,42 @@ class ReportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.watch<ReportBloc>();
+    final state = bloc.state;
+    String dateNote = "";
+    final dateTypes = [
+      FilterDateType.TODAY,
+      FilterDateType.LAST7DAYS,
+      FilterDateType.THISMONTH,
+      FilterDateType.LAST30DAYS,
+      FilterDateType.CUSTOM
+    ];
+
+    String formatDate(String format, DateTime date) =>
+        DateFormat(format).format(date);
+
+    if (state.filter != null) {
+      DateTime startDate = state.filter!.startDate!;
+      DateTime endDate = state.filter!.endDate!.toStartOfDay();
+
+      if (startDate == endDate) {
+        dateNote = formatDate("dd-MMM-yyyy", startDate);
+      } else {
+        if (startDate.year == endDate.year) {
+          if (startDate.month == endDate.month) {
+            dateNote =
+                "${formatDate("dd", startDate)} - ${formatDate("dd", endDate)} ${formatDate("MMM-yyyy", startDate)}";
+          } else {
+            dateNote =
+                "${formatDate("dd-MMM", startDate)} - ${formatDate("dd-MMM", endDate)} ${formatDate("yyyy", startDate)}";
+          }
+        } else {
+          dateNote =
+              "${formatDate("dd-MMM-yyyy", startDate)} - ${formatDate("dd-MMM-yyyy", endDate)}";
+        }
+      }
+    }
+
     return Scaffold(
       backgroundColor: pageSetting.color,
       appBar: AppBar(
@@ -21,40 +61,66 @@ class ReportPage extends StatelessWidget {
         title: Text(pageSetting.title),
         titleSpacing: 0,
         actions: [
-          InkWell(
-            onTap: () => showDateFilter(context),
-            child: Row(
-              children: [
-                Text("This Week"),
-                Icon(Icons.arrow_drop_down),
-              ],
-            ),
-          ),
-          h(2),
           DropdownButton<String>(
             alignment: Alignment.centerRight,
-            value: 'Income',
+            value: state.filter?.dateType,
             style: TextStyle(textBaseline: TextBaseline.alphabetic),
             iconEnabledColor: Colors.white,
             underline: Container(),
-            items: ['Income', 'Outcome']
+            items: dateTypes
                 .map(
-                  (option) => DropdownMenuItem(
-                    value: option,
+                  (dateType) => DropdownMenuItem(
+                    value: dateType,
                     child: Text(
-                      option,
+                      dateType,
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
                 )
                 .toList(),
-            onChanged: (val) => (),
-            selectedItemBuilder: (context) => ['Income', 'Outcome']
+            onChanged: (val) {
+              if (val == FilterDateType.CUSTOM) {
+              } else {
+                bloc.add(FilterChange(dateType: val));
+              }
+            },
+            selectedItemBuilder: (context) => dateTypes
                 .map(
-                  (option) => DropdownMenuItem(
-                    value: option,
+                  (dateType) => DropdownMenuItem(
+                    value: dateType,
                     child: Text(
-                      option,
+                      dateType,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          h(2),
+          DropdownButton<int>(
+            alignment: Alignment.centerRight,
+            value: state.filter?.typeId,
+            style: TextStyle(textBaseline: TextBaseline.alphabetic),
+            iconEnabledColor: Colors.white,
+            underline: Container(),
+            items: state.types
+                .map(
+                  (type) => DropdownMenuItem(
+                    value: type.id,
+                    child: Text(
+                      type.name,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (val) => bloc.add(FilterChange(typeId: val)),
+            selectedItemBuilder: (context) => state.types
+                .map(
+                  (type) => DropdownMenuItem(
+                    value: type.id,
+                    child: Text(
+                      type.name,
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -74,12 +140,12 @@ class ReportPage extends StatelessWidget {
               children: [
                 TopBox(
                   label: "Income Amount",
-                  value: 12000000,
+                  value: state.summary?.income ?? 0,
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
                 TopBox(
                   label: "Outcome Amount",
-                  value: 2560000,
+                  value: state.summary?.outcome ?? 0,
                   crossAxisAlignment: CrossAxisAlignment.end,
                 ),
               ],
@@ -99,13 +165,59 @@ class ReportPage extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      Text("20 Jun - 19 Jul 2025"),
+                      Text(dateNote),
                       v(1),
                       Divider(),
                       v(3),
-                      ReportChartWidget(),
+                      state.categories.isEmpty
+                          ? Container()
+                          : ReportChartWidget(state),
                       v(3),
-                      ReportItemWidget(),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: state.categories.length,
+                        itemBuilder: (context, index) {
+                          var item = state.categories[index];
+
+                          return Container(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            child: Row(
+                              children: [
+                                if (item.icon != null)
+                                  Icon(IconData(
+                                    item.icon!,
+                                    fontFamily: 'MaterialIcons',
+                                  )),
+                                h(2),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.categoryName ?? "",
+                                      style: text(context).bodyLarge,
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(Rupiah(item.amount ?? 0),
+                                        style: text(context).titleMedium!),
+                                    Text(
+                                      Percent(item.percent),
+                                      style: text(context).bodyMedium!.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

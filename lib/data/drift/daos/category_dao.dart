@@ -8,7 +8,7 @@ part 'category_dao.g.dart';
 class CategoryDao extends DatabaseAccessor<AppDatabase>
     with _$CategoryDaoMixin {
   CategoryDao(super.db);
-
+  
   Future<List<Category>> getByType(int typeId) {
     return (select(categories)..where((c) => c.typeId.equals(typeId))).get();
   }

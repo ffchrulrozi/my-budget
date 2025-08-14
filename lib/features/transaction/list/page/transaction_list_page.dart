@@ -9,12 +9,12 @@ import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.
 import 'package:my_budget/features/transaction/list/page/widgets/transaction_list_item_box_widget.dart';
 import 'package:my_budget/routes/paths.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
-import 'package:my_budget/utils/helper/money_helper.dart';
+import 'package:my_budget/utils/helper/number_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
 
-class TransactionPage extends StatelessWidget {
+class TransactionListPage extends StatelessWidget {
   final DashboardPageSetting pageSetting;
-  const TransactionPage({required this.pageSetting, super.key});
+  const TransactionListPage({required this.pageSetting, super.key});
 
   @override
   Widget build(BuildContext context) {

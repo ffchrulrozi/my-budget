@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:my_budget/features/report/bloc/report_state.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class ReportChartWidget extends StatelessWidget {
-  const ReportChartWidget({super.key});
+  final ReportState state;
+  const ReportChartWidget(this.state, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, double> dataMap = {
-      "Red": 10,
-      "Orange": 30,
-      "Green": 60,
+    Map<String, double> dataMap = {
+      for (var item in state.categories) item.categoryName!: item.percent!
     };
-    
+
+    List<Color> colors = [
+      Colors.red,
+      Colors.orange,
+      Colors.green,
+      Colors.blue,
+      Colors.purple,
+      Colors.teal,
+      Colors.blueGrey,
+      Colors.indigoAccent,
+      Colors.yellow,
+      Colors.brown,
+    ];
+    List<Color> colorList() => colors.sublist(0, state.categories.length);
+
     return PieChart(
-      centerText: "Income",
+      centerText: state.filter?.typeId == 1 ? "Outcome" : "Income",
       dataMap: dataMap,
-      animationDuration: const Duration(milliseconds: 800),
+      animationDuration: const Duration(milliseconds: 1000),
       chartRadius: 180,
-      colorList: const [Colors.red, Colors.orange, Colors.green],
+      colorList: colorList(),
       chartType: ChartType.ring,
       ringStrokeWidth: 30,
       chartValuesOptions: const ChartValuesOptions(
@@ -25,7 +39,11 @@ class ReportChartWidget extends StatelessWidget {
         showChartValues: false,
         showChartValueBackground: false,
       ),
-      legendOptions: const LegendOptions(showLegends: false),
+      legendOptions: const LegendOptions(
+        showLegends: true,
+        showLegendsInRow: true,
+        legendPosition: LegendPosition.bottom,
+      ),
     );
   }
 }

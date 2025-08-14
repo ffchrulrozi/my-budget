@@ -1,5 +1,4 @@
 import 'package:my_budget/data/drift/app_database.dart';
-import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
 
 class TransactionListState {
   final Summary? summary;
@@ -34,9 +33,9 @@ class TransactionListState {
 }
 
 class Summary {
-  final int income;
   final int outcome;
-  Summary(this.income, this.outcome);
+  final int income;
+  Summary(this.outcome, this.income);
 }
 
 class TransactionListResult {

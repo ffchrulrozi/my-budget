@@ -7,8 +7,6 @@ import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart'
 import 'package:my_budget/features/dashboard/page/widgets/bottom_bar_widget.dart';
 import 'package:my_budget/features/report/page/report_page.dart';
 import 'package:my_budget/features/setting/page/setting_page.dart';
-import 'package:my_budget/features/transaction/list/bloc/transaction_list_bloc.dart';
-import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
 import 'package:my_budget/features/transaction/list/page/transaction_list_page.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -38,20 +36,9 @@ class DashboardPage extends StatelessWidget {
                   controller: pageController,
                   onPageChanged: (index) => bloc.add(ChangeScreen(index)),
                   children: [
-                    BlocProvider(
-                      create: (_) => TransactionListBloc(),
-                      child: TransactionPage(pageSetting: pageSettings[0]),
-                    ),
-                    BlocProvider(
-                      create: (_) =>
-                          TransactionListBloc()..add(LoadTransactions()),
-                      child: ReportPage(pageSetting: pageSettings[1]),
-                    ),
-                    BlocProvider(
-                      create: (_) =>
-                          TransactionListBloc()..add(LoadTransactions()),
-                      child: SettingPage(pageSetting: pageSettings[2]),
-                    ),
+                    TransactionListPage(pageSetting: pageSettings[0]),
+                    ReportPage(pageSetting: pageSettings[1]),
+                    SettingPage(pageSetting: pageSettings[2]),
                   ],
                 ),
               ),

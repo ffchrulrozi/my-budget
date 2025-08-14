@@ -3,7 +3,7 @@ import 'package:my_budget/features/transaction/list/bloc/transaction_list_bloc.d
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
-import 'package:my_budget/utils/helper/money_helper.dart';
+import 'package:my_budget/utils/helper/number_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
 
 class ItemBoxWidget extends StatelessWidget {

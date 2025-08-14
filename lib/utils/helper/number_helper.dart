@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-String Rupiah(double number) =>
+String Rupiah(int val) =>
     NumberFormat.currency(locale: "id", symbol: "Rp ", decimalDigits: 0)
-        .format(number);
-String Percent(double number) =>
-    NumberFormat.percentPattern("id").format(number / 100);
+        .format(val);
+
+String Percent(double? val) => val == null ? "0%" : "${(val / 100).toStringAsFixed(2)}%";

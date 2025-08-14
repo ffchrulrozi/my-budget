@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_budget/data/drift/app_database.dart';
 import 'package:my_budget/data/drift/daos/type_dao.dart';
@@ -24,13 +23,6 @@ class TransactionListBloc
   }
 
   Future<Summary> getSummary() async {
-    var income = await (db.selectOnly(db.transactions)
-          ..addColumns([db.transactions.amount.sum()])
-          ..where(db.transactions.date.equals(state.filter!.date!))
-          ..where(db.transactions.typeId.equals(2)))
-        .map((row) => row.read(db.transactions.amount.sum()) ?? 0)
-        .getSingle();
-
     final outcome = await (db.selectOnly(db.transactions)
           ..addColumns([db.transactions.amount.sum()])
           ..where(db.transactions.date.equals(state.filter!.date!))
@@ -38,7 +30,14 @@ class TransactionListBloc
         .map((row) => row.read(db.transactions.amount.sum()) ?? 0)
         .getSingle();
 
-    return Summary(income, outcome);
+    final income = await (db.selectOnly(db.transactions)
+          ..addColumns([db.transactions.amount.sum()])
+          ..where(db.transactions.date.equals(state.filter!.date!))
+          ..where(db.transactions.typeId.equals(2)))
+        .map((row) => row.read(db.transactions.amount.sum()) ?? 0)
+        .getSingle();
+
+    return Summary(outcome, income);
   }
 
   Future<List<TransactionListResult>> getTransactions() async {
@@ -63,18 +62,15 @@ class TransactionListBloc
   }
 
   _Init(event, emit) async {
+    emit(state.copyWith(
+        filter: Filter(date: DateTime.now().toStartOfDay(), typeId: 1)));
+
     await _LoadTransactions(event, emit);
     await _LoadTypes(event, emit);
   }
 
   _LoadTransactions(event, emit) async {
     emit(state.copyWith(isLoading: true));
-    debugPrint("A");
-
-    if (state.filter == null) {
-      emit(state.copyWith(
-          filter: Filter(date: DateTime.now().toStartOfDay(), typeId: 1)));
-    }
 
     emit(state.copyWith(
       transactions: await getTransactions(),

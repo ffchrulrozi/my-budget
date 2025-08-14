@@ -5,7 +5,7 @@ class Item {
   final IconData icon;
   final String title;
   final String desc;
-  final double amount;
+  final int amount;
   final double percent;
 
   Item({
