@@ -17,6 +17,9 @@ class ReportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor =
+        pageSetting.isThemeLight ? pageSetting.color : Colors.black;
+
     final bloc = context.watch<ReportBloc>();
     final state = bloc.state;
     String dateNote = "";
@@ -54,9 +57,9 @@ class ReportPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: pageSetting.color,
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        backgroundColor: pageSetting.color,
+        backgroundColor: primaryColor,
         leading: Icon(pageSetting.icon),
         title: Text(pageSetting.title),
         titleSpacing: 0,

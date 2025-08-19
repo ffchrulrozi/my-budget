@@ -18,13 +18,16 @@ class TransactionListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor =
+        pageSetting.isThemeLight ? pageSetting.color : Colors.black;
+
     return BlocBuilder<TransactionListBloc, TransactionListState>(
       builder: (context, state) {
         final bloc = context.read<TransactionListBloc>();
         return Scaffold(
-          backgroundColor: pageSetting.color,
+          backgroundColor: primaryColor,
           appBar: AppBar(
-            backgroundColor: pageSetting.color,
+            backgroundColor: primaryColor,
             leading: Icon(pageSetting.icon),
             title: Text(pageSetting.title),
             titleSpacing: 0,
@@ -112,7 +115,7 @@ class TransactionListPage extends StatelessWidget {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: pageSetting.color,
+            backgroundColor: primaryColor,
             onPressed: () => context.push(Paths.TRANSACTION_ADD),
             child: Icon(
               Icons.add,

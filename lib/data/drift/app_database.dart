@@ -2,15 +2,17 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:my_budget/data/drift/tables/categories.dart';
+import 'package:my_budget/data/drift/tables/settings.dart';
 import 'package:my_budget/data/drift/tables/transactions.dart';
 import 'package:my_budget/data/drift/tables/types.dart';
+import 'package:my_budget/features/setting/models/setting.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'dart:io';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Types, Categories, Transactions])
+@DriftDatabase(tables: [Types, Categories, Transactions, Settings])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -30,13 +32,15 @@ class AppDatabase extends _$AppDatabase {
       );
 
   Future<void> _seedData() async {
+    //seed types
     final outcomeId = await into(types).insert(
-      TypesCompanion.insert(id: Value(1), name: 'Outcome'),
+      TypesCompanion.insert(id: 1, name: 'Outcome'),
     );
     final incomeId = await into(types).insert(
-      TypesCompanion.insert(id: Value(2), name: 'Income'),
+      TypesCompanion.insert(id: 2, name: 'Income'),
     );
 
+    //seed categories
     await into(categories).insert(
       CategoriesCompanion.insert(
         name: 'Food',
@@ -65,6 +69,20 @@ class AppDatabase extends _$AppDatabase {
         icon: m.Icons.person.codePoint,
       ),
     );
+
+    // seed settings
+    await into(settings).insert(SettingsCompanion.insert(
+      code: SettingCode.APP_THEME,
+      value: APP_THEME.LIGHT,
+    ));
+    await into(settings).insert(SettingsCompanion.insert(
+      code: SettingCode.APP_LANGUAGE,
+      value: APP_LANGUAGE.EN,
+    ));
+    await into(settings).insert(SettingsCompanion.insert(
+      code: SettingCode.MONTHLY_LIMIT,
+      value: "1000000",
+    ));
   }
 }
 

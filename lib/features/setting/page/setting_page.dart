@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:my_budget/data/models/category.dart';
+import 'package:my_budget/features/setting/bloc/setting_bloc.dart';
 import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
+import 'package:my_budget/features/setting/bloc/setting_event.dart';
 import 'package:my_budget/features/setting/models/setting.dart';
+import 'package:my_budget/features/setting/page/widgets/setting_category_form_widget.dart';
+import 'package:my_budget/features/setting/page/widgets/setting_theme_widget.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
 
@@ -12,38 +17,15 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var setting = Setting(
-      language: "EN",
-      isAppBgLight: true,
-      monthlyLimit: 2000000,
-      categories: <Category>[
-        Category(
-          label: "Transportation",
-          icon: Icons.motorcycle,
-          color: Colors.teal,
-        ),
-        Category(
-          label: "Food",
-          icon: Icons.food_bank_outlined,
-          color: Colors.pink,
-        ),
-        Category(
-          label: "Data Package",
-          icon: Icons.wifi,
-          color: Colors.orange,
-        ),
-        Category(
-          label: "Monthly Needs",
-          icon: Icons.home_work_outlined,
-          color: Colors.purpleAccent,
-        ),
-      ],
-    );
+    final primaryColor =
+        pageSetting.isThemeLight ? pageSetting.color : Colors.black;
+    final bloc = context.watch<SettingBloc>();
+    final state = bloc.state;
 
     return Scaffold(
-      backgroundColor: pageSetting.color,
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        backgroundColor: pageSetting.color,
+        backgroundColor: primaryColor,
         leading: Icon(pageSetting.icon),
         title: Text(pageSetting.title),
         titleSpacing: 0,
@@ -72,15 +54,17 @@ class SettingPage extends StatelessWidget {
                 padding: EdgeInsets.all(1),
                 child: Row(
                   children: [
-                    SunMoonBox(
+                    SettingThemeWidget(
                       icon: Icons.sunny,
                       color: Colors.orange,
-                      isActive: true,
+                      isActive: state.appTheme == APP_THEME.LIGHT,
+                      bloc: bloc,
                     ),
-                    SunMoonBox(
+                    SettingThemeWidget(
                       icon: FontAwesomeIcons.moon,
                       color: Colors.blueGrey,
-                      isActive: false,
+                      isActive: state.appTheme == APP_THEME.DARK,
+                      bloc: bloc,
                     ),
                   ],
                 ),
@@ -106,36 +90,57 @@ class SettingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Monthly limit", style: text(context).titleSmall),
-                TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 10,
+                if (state.monthlyLimit != null)
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
+                      ),
+                      prefixText: "Rp ",
                     ),
-                    prefixText: "Rp ",
+                    initialValue: state.monthlyLimit.toString(),
                   ),
-                  initialValue: setting.monthlyLimit.toString(),
-                ),
                 v(1),
                 Divider(),
-                Text("Categories", style: text(context).titleSmall),
+                Row(children: [
+                  Text("Categories", style: text(context).titleSmall),
+                  Spacer(),
+                  Expanded(
+                    child: FormBuilderDropdown<int>(
+                      name: 'type',
+                      initialValue:
+                          state.types.isEmpty ? null : state.types[0].id,
+                      items: state.types
+                          .map((type) => DropdownMenuItem(
+                              value: type.id, child: Text(type.name)))
+                          .toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          bloc.add(ChangeCategoryType(val));
+                        }
+                      },
+                    ),
+                  ),
+                  h(1),
+                ]),
                 v(1),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: setting.categories?.length,
-                  itemBuilder: (context, index) {
-                    var category = setting.categories![index];
-
-                    return CategoryForm(category: category);
-                  },
+                  itemCount: state.categories.length,
+                  itemBuilder: (context, index) => SettingCategoryFormWidget(
+                    category: state.categories[index],
+                    key: ValueKey(state.categories[index].id),
+                  ),
                 ),
                 Row(children: [
                   Spacer(),
                   Container(
                     decoration: BoxDecoration(
-                      color: pageSetting.color,
+                      color: primaryColor,
                       borderRadius: BorderRadius.circular(5),
                     ),
                     padding: EdgeInsets.all(8),
@@ -149,8 +154,7 @@ class SettingPage extends StatelessWidget {
                     ]),
                   )
                 ]),
-                // CategoryForm(),
-                v(3),
+                v(5),
                 Center(
                   child: InkWell(
                     onTap: () => (),
@@ -158,9 +162,9 @@ class SettingPage extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       decoration: BoxDecoration(
-                        border: Border.all(color: pageSetting.color),
+                        border: Border.all(color: primaryColor),
                         borderRadius: BorderRadius.circular(10),
-                        color: pageSetting.color,
+                        color: primaryColor,
                       ),
                       child: Text(
                         "Save",
@@ -173,76 +177,6 @@ class SettingPage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class CategoryForm extends StatelessWidget {
-  final Category? category;
-  const CategoryForm({this.category, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(9),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: category?.color ?? Colors.black),
-              color: category?.color,
-            ),
-            child: Icon(
-              category?.icon,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-          h(1),
-          Expanded(
-            child: TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 10,
-                ),
-              ),
-              initialValue: category?.label,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class SunMoonBox extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final bool isActive;
-  const SunMoonBox({
-    required this.icon,
-    required this.color,
-    required this.isActive,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        color: isActive ? color : null,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Icon(
-        icon,
-        size: 18,
-        color: isActive ? Colors.white : color,
       ),
     );
   }
