@@ -38,36 +38,36 @@
   <li>
     <b>Splash</b>
     <p>Show splash screen for 2 seconds, then go to dashboard screen.</p>
-    <img src="./git-img/1-splash.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/1-splash.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
   <li>
     <b>Daily Transaction</b>
     <p>Show income/outcome transaction based on date filter.</p>
-    <img src="./git-img/2-list.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/2-list.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
   <li>
     <b>Add Transaction</b>
     <p>Create new transaction</p>
-    <img src="./git-img/3-add-transaction.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/3-add-transaction.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
   <li>
     <b>Report</b>
     <p>Show transactions report for each categories based on date range (last 7 days, this month, and etc.)</p>
-    <img src="./git-img/4-report.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/4-report.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
   <li>
     <b>Setting</b>
     <p>Update app setting</p>
-    <img src="./git-img/5-setting.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/5-setting.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
   <li>
     <b>Change Language</b>
     <p>This is example when language be changed from English to Bahasa Indonesia</p>
-    <img src="./git-img/6-change-language.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/6-change-language.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
   <li>
     <b>Change Theme</b>
     <p>This is example when app theme be changed from light to dark.</p>
-    <img src="./git-img/7-change-theme.png" style="height:200px; width: 90px; object-fit:cover" />
+    <img src="./git-img/7-change-theme.png" style="height:200px; width: 115px; object-fit:cover" />
   </li>
 </ul>
