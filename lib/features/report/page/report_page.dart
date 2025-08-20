@@ -10,6 +10,7 @@ import 'package:my_budget/utils/ext/date_ext.dart';
 import 'package:my_budget/utils/helper/divider_helper.dart';
 import 'package:my_budget/utils/helper/number_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
+import 'package:my_budget/widgets/category_icon_box_widget.dart';
 
 class ReportPage extends StatelessWidget {
   final DashboardPageSetting pageSetting;
@@ -187,12 +188,11 @@ class ReportPage extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 15),
                             child: Row(
                               children: [
-                                if (item.icon != null)
-                                  Icon(IconData(
-                                    item.icon!,
-                                    fontFamily: 'MaterialIcons',
-                                  )),
-                                h(2),
+                                CategoryIconBoxWidget(
+                                  item.icon!,
+                                  pageSetting.color,
+                                ),
+                                h(1),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

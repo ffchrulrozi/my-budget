@@ -6,6 +6,7 @@ import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.
 import 'package:my_budget/utils/helper/divider_helper.dart';
 import 'package:my_budget/utils/helper/number_helper.dart';
 import 'package:my_budget/utils/helper/style_helper.dart';
+import 'package:my_budget/widgets/category_icon_box_widget.dart';
 
 class ItemBoxWidget extends StatelessWidget {
   final TransactionListBloc bloc;
@@ -39,20 +40,9 @@ class ItemBoxWidget extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 15),
                         child: Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 2, color: pageSetting.color),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: EdgeInsets.all(2),
-                              child: Icon(
-                                IconData(
-                                  transaction.icon,
-                                  fontFamily: 'MaterialIcons',
-                                ),
-                                size: 28,
-                              ),
+                            CategoryIconBoxWidget(
+                              transaction.icon,
+                              pageSetting.color,
                             ),
                             h(1),
                             Column(

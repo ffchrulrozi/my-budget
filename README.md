@@ -51,23 +51,23 @@
     <img src="./git-img/3-add-transaction.png" style="height:200px; width: 90px; object-fit:cover" />
   </li>
   <li>
-    <b>Dashboard</b>
-    <p>There are 3 main features here: home, news, and profile.<br />User can go to each page using bottom navigation.</p>
+    <b>Report</b>
+    <p>Show transactions report for each categories based on date range (last 7 days, this month, and etc.)</p>
     <img src="./git-img/4-report.png" style="height:200px; width: 90px; object-fit:cover" />
   </li>
   <li>
-    <b>Schedule</b>
-    <p>Show schedules of each days and their details.</p>
+    <b>Setting</b>
+    <p>Update app setting</p>
     <img src="./git-img/5-setting.png" style="height:200px; width: 90px; object-fit:cover" />
   </li>
   <li>
-    <b>Transcript</b>
-    <p>Show transcript report of previous semester.</p>
+    <b>Change Language</b>
+    <p>This is example when language be changed from English to Bahasa Indonesia</p>
     <img src="./git-img/6-change-language.png" style="height:200px; width: 90px; object-fit:cover" />
   </li>
   <li>
-    <b>Progress</b>
-    <p>Show progress report of this semester.<br />See attendance, scores (home work, mid/end test, etc), up to estimating final score.</p>
+    <b>Change Theme</b>
+    <p>This is example when app theme be changed from light to dark.</p>
     <img src="./git-img/7-change-theme.png" style="height:200px; width: 90px; object-fit:cover" />
   </li>
 </ul>
