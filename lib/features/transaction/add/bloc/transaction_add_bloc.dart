@@ -24,8 +24,6 @@ class TransactionAddBloc
             typeId: Value(event.typeId),
             categoryId: Value(event.categoryId),
           ));
-
-      // add(LoadTransactions());
       emit(state.copyWith(isSaved: true));
     });
 

@@ -4,3 +4,4 @@ analyzer:
     non_constant_identifier_names: ignore
     constant_identifier_names: ignore
     constant_pattern_never_matches_value_type: ignore
+    camel_case_types: ignore

@@ -42,9 +42,9 @@ class CategoryResult {
   final int? icon;
   final String? categoryName;
   final int? amount;
-  final double? percent;
+  final double? avg;
 
-  CategoryResult({this.icon, this.categoryName, this.amount, this.percent});
+  CategoryResult({this.icon, this.categoryName, this.amount, this.avg});
 }
 
 class Filter {
@@ -71,8 +71,8 @@ class Filter {
 
 class FilterDateType {
   static const String TODAY = "today";
-  static const String LAST7DAYS = "last 7 days";
-  static const String THISMONTH = "this month";
-  static const String LAST30DAYS = "last 30 days";
+  static const String LAST7DAYS = "last7Days";
+  static const String THISMONTH = "thisMonth";
+  static const String LAST30DAYS = "last30Days";
   static const String CUSTOM = "custom";
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -14,7 +15,10 @@ import 'package:my_budget/theme/app_theme.dart';
 
 final getIt = GetIt.instance;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   final db = AppDatabase();
   getIt.registerSingleton<AppDatabase>(db);
   getIt.registerSingleton<TypeDao>(TypeDao(db));
@@ -27,7 +31,12 @@ void main() {
         BlocProvider(create: (_) => TransactionListBloc()),
         BlocProvider(create: (_) => ReportBloc()),
       ],
-      child: const MainApp(),
+      child: EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('id')],
+        path: 'lib/assets/translations',
+        fallbackLocale: const Locale('en'),
+        child: const MainApp(),
+      ),
     ),
   );
 }
@@ -45,7 +54,13 @@ class MainApp extends StatelessWidget {
           ),
         );
       } else {
+        if (context.locale.countryCode == null) {
+          context.setLocale(Locale(state.appLanguage!));
+        }
         return MaterialApp.router(
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: state.appTheme == APP_THEME.LIGHT

@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
 import 'package:my_budget/features/report/bloc/report_bloc.dart';
 import 'package:my_budget/features/report/bloc/report_event.dart';
@@ -24,11 +24,11 @@ class ReportPage extends StatelessWidget {
     final state = bloc.state;
     String dateNote = "";
     final dateTypes = [
-      FilterDateType.TODAY,
-      FilterDateType.LAST7DAYS,
-      FilterDateType.THISMONTH,
-      FilterDateType.LAST30DAYS,
-      FilterDateType.CUSTOM
+      FilterDateType.TODAY.tr(),
+      FilterDateType.LAST7DAYS.tr(),
+      FilterDateType.THISMONTH.tr(),
+      FilterDateType.LAST30DAYS.tr(),
+      FilterDateType.CUSTOM.tr()
     ];
 
     String formatDate(String format, DateTime date) =>
@@ -66,7 +66,7 @@ class ReportPage extends StatelessWidget {
         actions: [
           DropdownButton<String>(
             alignment: Alignment.centerRight,
-            value: state.filter?.dateType,
+            value: state.filter?.dateType?.tr(),
             style: TextStyle(textBaseline: TextBaseline.alphabetic),
             iconEnabledColor: Colors.white,
             underline: Container(),
@@ -111,7 +111,7 @@ class ReportPage extends StatelessWidget {
                   (type) => DropdownMenuItem(
                     value: type.id,
                     child: Text(
-                      type.name,
+                      type.name.tr(),
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
@@ -123,7 +123,7 @@ class ReportPage extends StatelessWidget {
                   (type) => DropdownMenuItem(
                     value: type.id,
                     child: Text(
-                      type.name,
+                      type.name.tr(),
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -142,12 +142,12 @@ class ReportPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TopBox(
-                  label: "Income Amount",
+                  label: "incomeAmount".tr(),
                   value: state.summary?.income ?? 0,
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
                 TopBox(
-                  label: "Outcome Amount",
+                  label: "outcomeAmount".tr(),
                   value: state.summary?.outcome ?? 0,
                   crossAxisAlignment: CrossAxisAlignment.end,
                 ),
@@ -209,7 +209,7 @@ class ReportPage extends StatelessWidget {
                                     Text(Rupiah(item.amount ?? 0),
                                         style: text(context).titleMedium!),
                                     Text(
-                                      Percent(item.percent),
+                                      Percent(item.avg),
                                       style: text(context).bodyMedium!.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),

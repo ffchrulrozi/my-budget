@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_budget/features/report/bloc/report_state.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -9,7 +10,7 @@ class ReportChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, double> dataMap = {
-      for (var item in state.categories) item.categoryName!: item.percent!
+      for (var item in state.categories) item.categoryName!: item.avg!
     };
 
     List<Color> colors = [
@@ -27,7 +28,7 @@ class ReportChartWidget extends StatelessWidget {
     List<Color> colorList() => colors.sublist(0, state.categories.length);
 
     return PieChart(
-      centerText: state.filter?.typeId == 1 ? "Outcome" : "Income",
+      centerText: state.filter?.typeId == 1 ? "outcome".tr() : "income".tr(),
       dataMap: dataMap,
       animationDuration: const Duration(milliseconds: 1000),
       chartRadius: 180,

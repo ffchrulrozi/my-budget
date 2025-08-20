@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_budget/features/dashboard/bloc/dashboard_bloc.dart';
@@ -17,15 +18,18 @@ class DashboardPage extends StatelessWidget {
   final PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
-    final isThemeLight = context.watch<SettingBloc>().state.appTheme == APP_THEME.LIGHT;
+    final isThemeLight =
+        context.watch<SettingBloc>().state.appTheme == APP_THEME.LIGHT;
+    final bloc = context.read<DashboardBloc>();
 
     var pageSettings = <DashboardPageSetting>[
-      DashboardPageSetting("Daily", Colors.blue, Icons.calendar_month, isThemeLight),
-      DashboardPageSetting("Report", Colors.green, Icons.list, isThemeLight),
-      DashboardPageSetting("Setting", Colors.orangeAccent, Icons.settings, isThemeLight),
+      DashboardPageSetting(
+          "dailyTitle".tr(), isThemeLight ? Colors.blue : Colors.black, Icons.calendar_month, isThemeLight),
+      DashboardPageSetting(
+          "reportTitle".tr(), isThemeLight ? Colors.green : Colors.black, Icons.list, isThemeLight),
+      DashboardPageSetting("settingTitle".tr(), isThemeLight ? Colors.orangeAccent : Colors.black,
+          Icons.settings, isThemeLight),
     ];
-
-    final bloc = context.read<DashboardBloc>();
 
     return BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {

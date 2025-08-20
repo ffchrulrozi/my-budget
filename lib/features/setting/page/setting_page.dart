@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -17,10 +18,11 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor =
-        pageSetting.isThemeLight ? pageSetting.color : Colors.black;
     final bloc = context.watch<SettingBloc>();
     final state = bloc.state;
+    final primaryColor =
+        pageSetting.isThemeLight ? pageSetting.color : Colors.black;
+    final languages = [APP_LANGUAGE.EN, APP_LANGUAGE.ID];
 
     return Scaffold(
       backgroundColor: primaryColor,
@@ -30,18 +32,44 @@ class SettingPage extends StatelessWidget {
         title: Text(pageSetting.title),
         titleSpacing: 0,
         actions: [
-          InkWell(
-            onTap: () => (),
-            child: Row(
-              spacing: 10,
-              children: [
-                Text("EN"),
-                Icon(
-                  FontAwesomeIcons.globe,
-                  size: 20,
+          DropdownButton<String>(
+            alignment: Alignment.centerRight,
+            value: state.appLanguage,
+            style: TextStyle(textBaseline: TextBaseline.alphabetic),
+            iconEnabledColor: Colors.white,
+            underline: Container(),
+            items: languages
+                .map(
+                  (option) => DropdownMenuItem(
+                    value: option,
+                    child: Text(
+                      option.toUpperCase(),
+                      style: TextStyle(
+                        color: state.appTheme == APP_THEME.LIGHT
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                    ),
+                  ),
                 )
-              ],
-            ),
+                .toList(),
+            onChanged: (val) {
+              if (val != state.appLanguage) {
+                context.setLocale(Locale(val!));
+                bloc.add(UpdateLanguage());
+              }
+            },
+            selectedItemBuilder: (context) => languages
+                .map(
+                  (option) => DropdownMenuItem(
+                    value: option,
+                    child: Text(
+                      option.toUpperCase(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
           h(2),
           Row(
@@ -89,7 +117,7 @@ class SettingPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Monthly limit", style: text(context).titleSmall),
+                Text("monthlyLimit".tr(), style: text(context).titleSmall),
                 if (state.monthlyLimit != null)
                   TextFormField(
                     keyboardType: TextInputType.number,
@@ -106,7 +134,7 @@ class SettingPage extends StatelessWidget {
                 v(1),
                 Divider(),
                 Row(children: [
-                  Text("Categories", style: text(context).titleSmall),
+                  Text("categories".tr(), style: text(context).titleSmall),
                   Spacer(),
                   Expanded(
                     child: FormBuilderDropdown<int>(
@@ -115,7 +143,7 @@ class SettingPage extends StatelessWidget {
                           state.types.isEmpty ? null : state.types[0].id,
                       items: state.types
                           .map((type) => DropdownMenuItem(
-                              value: type.id, child: Text(type.name)))
+                              value: type.id, child: Text(type.name.tr())))
                           .toList(),
                       onChanged: (val) {
                         if (val != null) {
@@ -148,7 +176,7 @@ class SettingPage extends StatelessWidget {
                       Icon(Icons.add, color: Colors.white),
                       h(1),
                       Text(
-                        "Add Category",
+                        "addCategory".tr(),
                         style: TextStyle(color: Colors.white),
                       )
                     ]),
@@ -167,7 +195,7 @@ class SettingPage extends StatelessWidget {
                         color: primaryColor,
                       ),
                       child: Text(
-                        "Save",
+                        "save".tr(),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

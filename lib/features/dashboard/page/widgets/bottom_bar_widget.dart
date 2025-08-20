@@ -68,8 +68,6 @@ class BottomBarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final bloc = context.read<DashboardBloc>();
-
     return InkWell(
       onTap: () {
         pageController.animateToPage(
@@ -77,7 +75,6 @@ class BottomBarMenu extends StatelessWidget {
           duration: Duration(milliseconds: 500),
           curve: Curves.easeIn,
         );
-        // bloc.add(ChangeScreen(index));
       },
       child: Container(
         height: 50,

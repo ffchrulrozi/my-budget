@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_budget/features/dashboard/models/dashboard_page_setting.dart';
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_bloc.dart';
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_event.dart';
 import 'package:my_budget/features/transaction/list/bloc/transaction_list_state.dart';
@@ -9,7 +10,8 @@ import 'package:my_budget/utils/helper/style_helper.dart';
 class ItemBoxWidget extends StatelessWidget {
   final TransactionListBloc bloc;
   final TransactionListState state;
-  const ItemBoxWidget(this.bloc, this.state, {super.key});
+  final DashboardPageSetting pageSetting;
+  const ItemBoxWidget(this.bloc, this.state, this.pageSetting, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +39,22 @@ class ItemBoxWidget extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 15),
                         child: Row(
                           children: [
-                            // Icon(IconData(
-                            //   transaction.icon,
-                            //   fontFamily: 'MaterialIcons',
-                            // )),
-                            h(2),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: pageSetting.color),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.all(2),
+                              child: Icon(
+                                IconData(
+                                  transaction.icon,
+                                  fontFamily: 'MaterialIcons',
+                                ),
+                                size: 28,
+                              ),
+                            ),
+                            h(1),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

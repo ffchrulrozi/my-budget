@@ -12,9 +12,8 @@ final lightTheme = ThemeData(
 );
 
 final darkTheme = ThemeData(
-  brightness: Brightness.dark,
   colorScheme:
-      ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark),
+      ColorScheme.fromSeed(seedColor: Colors.blue,),
   useMaterial3: true,
 
   scaffoldBackgroundColor: Colors.white,

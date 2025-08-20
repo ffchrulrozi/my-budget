@@ -34,10 +34,10 @@ class AppDatabase extends _$AppDatabase {
   Future<void> _seedData() async {
     //seed types
     final outcomeId = await into(types).insert(
-      TypesCompanion.insert(id: 1, name: 'Outcome'),
+      TypesCompanion.insert(id: 1, name: 'outcome'),
     );
     final incomeId = await into(types).insert(
-      TypesCompanion.insert(id: 2, name: 'Income'),
+      TypesCompanion.insert(id: 2, name: 'income'),
     );
 
     //seed categories

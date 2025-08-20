@@ -13,16 +13,18 @@ class SettingCategoryFormWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
-          Container(
-            padding: EdgeInsets.all(9),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(),
-            ),
-            child: Icon(
-              IconData(category.icon),
-              color: Colors.white,
-              size: 28,
+          InkWell(
+            onTap: () => (),
+            child: Container(
+              padding: EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(),
+              ),
+              child: Icon(
+                IconData(category.icon, fontFamily: 'MaterialIcons'),
+                size: 28,
+              ),
             ),
           ),
           h(1),

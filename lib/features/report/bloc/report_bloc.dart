@@ -26,24 +26,32 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
     final t = db.alias(db.transactions, 't');
     final c = db.alias(db.categories, 'c');
     final sum = t.amount.sum();
-    final avg = t.amount.avg();
+
+    final totalSum = (await (db.selectOnly(t)
+              ..addColumns([sum])
+              ..where(t.date.isBiggerOrEqualValue(state.filter!.startDate!))
+              ..where(t.date.isSmallerOrEqualValue(state.filter!.endDate!))
+              ..where(t.typeId.equals(state.filter!.typeId!)))
+            .getSingle())
+        .read(sum);
 
     final query = db.selectOnly(t)
-      ..addColumns([c.name, c.icon, sum, avg])
+      ..addColumns([c.name, c.icon, sum])
       ..join([innerJoin(c, c.id.equalsExp(t.categoryId))])
       ..where(t.date.isBiggerOrEqualValue(state.filter!.startDate!))
       ..where(t.date.isSmallerOrEqualValue(state.filter!.endDate!))
       ..where(t.typeId.equals(state.filter!.typeId!))
-      ..groupBy([c.name]);
+      ..groupBy([c.name, c.icon]);
 
-    final results = await query
-        .map((row) => CategoryResult(
-              icon: row.read(c.icon),
-              categoryName: row.read(c.name),
-              amount: row.read(sum),
-              percent: row.read(avg),
-            ))
-        .get();
+    final results = await query.map((row) {
+      final avg = row.read(sum)! / totalSum!;
+      return CategoryResult(
+        icon: row.read(c.icon),
+        categoryName: row.read(c.name),
+        amount: row.read(sum),
+        avg: avg,
+      );
+    }).get();
 
     return results;
   }

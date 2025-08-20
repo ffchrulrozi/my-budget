@@ -23,7 +23,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     add(Init());
   }
 
-  _Init(event, Emitter<SettingState> emit) async {
+  _Init(Init event, Emitter<SettingState> emit) async {
     final setting = await db.select(db.settings).get();
 
     emit(SettingState(
@@ -48,40 +48,44 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     ));
   }
 
-  _UpdateAppTheme(event, emit) async {
+  _UpdateAppTheme(UpdateAppTheme event, Emitter<SettingState> emit) async {
     final appTheme = (await (db.select(db.settings)
               ..where((x) => x.code.equals(SettingCode.APP_THEME)))
             .getSingle())
         .value;
 
-    final lightOrDark =
+    final newAppTheme =
         appTheme == APP_THEME.LIGHT ? APP_THEME.DARK : APP_THEME.LIGHT;
 
     await (db.update(db.settings)
           ..where((x) => x.code.equals(SettingCode.APP_THEME)))
         .write(
       SettingsCompanion(
-        value: Value(lightOrDark),
+        value: Value(newAppTheme),
       ),
     );
 
-    emit(state.copyWith(appTheme: lightOrDark));
+    emit(state.copyWith(appTheme: newAppTheme));
   }
 
-  _UpdateLanguage(event, emit) async {
+  _UpdateLanguage(UpdateLanguage event, Emitter<SettingState> emit) async {
     final appLanguage = (await (db.select(db.settings)
               ..where((x) => x.code.equals(SettingCode.APP_LANGUAGE)))
             .getSingle())
         .value;
 
+    final newAppLanguage =
+        appLanguage == APP_LANGUAGE.EN ? APP_LANGUAGE.ID : APP_LANGUAGE.EN;
+
     await (db.update(db.settings)
           ..where((x) => x.code.equals(SettingCode.APP_LANGUAGE)))
         .write(
       SettingsCompanion(
-        value: Value(
-            appLanguage == APP_LANGUAGE.EN ? APP_LANGUAGE.ID : APP_LANGUAGE.EN),
+        value: Value(newAppLanguage),
       ),
     );
+
+    emit(state.copyWith(appLanguage: newAppLanguage));
   }
 
   _Save(Save event, emit) async {
